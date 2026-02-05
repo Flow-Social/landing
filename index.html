@@ -154,7 +154,7 @@
             <div id="card-loader" class="card-loader">Ищем котика...</div>
             <img id="cat-content" src="" alt="Cat Card">
             <div class="card-overlay">
-                <h2>Пост с котиком!/h2>
+                <h2>Пост с котиком!</h2>
                 <p>Лента знает, что ты любишь</p>
             </div>
         </div>
@@ -178,7 +178,6 @@
             loader.innerText = 'Нейросеть ищет кота...';
 
             try {
-                // Используем стабильный API котиков (поддерживает гифки)
                 const response = await fetch('https://api.thecatapi.com/v1/images/search?mime_types=gif');
                 const data = await response.json();
                 
