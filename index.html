@@ -3,12 +3,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>Флоу — В потоке</title>
+    <title>Флоу — Соцсеть нового формата</title>
     <style>
         body {
-            background: #050505;
+            background: #000;
             color: #fff;
-            font-family: -apple-system, system-ui, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -16,109 +16,137 @@
             height: 100vh;
             margin: 0;
             overflow: hidden;
+            touch-action: none;
         }
 
-        .logo-img {
-            width: 120px;
-            margin-bottom: 30px;
-            filter: drop-shadow(0 0 10px rgba(121, 40, 202, 0.5));
+        /* Шапка с логотипом */
+        .header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 50px;
+        }
+
+        .logo-mini {
+            width: 32px;
+            height: auto;
+        }
+
+        .tagline {
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            font-weight: 300;
+            opacity: 0.7;
+            border-left: 1px solid rgba(255, 255, 255, 0.3);
+            padding-left: 15px;
+            line-height: 1;
         }
 
         /* Контейнер для карточки */
         .card-container {
             position: relative;
-            width: 300px;
-            height: 450px;
+            width: 320px;
+            height: 480px;
             perspective: 1000px;
         }
 
         .card {
             width: 100%;
             height: 100%;
-            background: linear-gradient(145deg, #1a1a1a, #0a0a0a);
-            border-radius: 24px;
-            border: 1px solid #333;
+            background: #111;
+            border-radius: 30px;
+            border: 1px solid #222;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             cursor: grab;
             position: absolute;
-            transition: transform 0.3s ease, opacity 0.3s ease;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
-            touch-action: none;
+            transition: transform 0.4s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.3s ease;
+            box-shadow: 0 30px 60px rgba(0,0,0,0.8);
+            overflow: hidden;
         }
 
         .card:active { cursor: grabbing; }
 
-        .card img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 24px;
+        .card-content {
+            padding: 40px;
+            text-align: center;
             pointer-events: none;
         }
 
-        .card-info {
-            position: absolute;
-            bottom: 20px;
-            left: 20px;
-            text-align: left;
+        .card-content h2 {
+            margin: 0 0 10px 0;
+            font-size: 24px;
+            background: linear-gradient(90deg, #fff, #888);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
         }
 
-        .btn {
-            margin-top: 40px;
+        .card-content p {
+            font-size: 14px;
+            opacity: 0.5;
+        }
+
+        /* Кнопка установки */
+        .install-btn {
+            margin-top: 60px;
             background: #fff;
             color: #000;
-            padding: 16px 32px;
-            border-radius: 50px;
+            padding: 18px 45px;
+            border-radius: 100px;
             text-decoration: none;
             font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 1px;
             font-size: 14px;
+            letter-spacing: 0.5px;
+            transition: transform 0.2s;
         }
 
-        /* Индикаторы свайпа */
-        .status {
+        .install-btn:active { transform: scale(0.95); }
+
+        /* Маркеры лайка/дизлайка */
+        .indicator {
             position: absolute;
-            top: 20px;
+            top: 40px;
+            font-size: 32px;
             font-weight: 900;
-            font-size: 2rem;
             opacity: 0;
             text-transform: uppercase;
+            pointer-events: none;
+            z-index: 10;
         }
-        .like { left: 20px; color: #00ff88; transform: rotate(-20deg); }
-        .dislike { right: 20px; color: #ff0055; transform: rotate(20deg); }
+        .like { left: 30px; color: #00ffa3; transform: rotate(-15deg); }
+        .dislike { right: 30px; color: #ff0055; transform: rotate(15deg); }
     </style>
 </head>
 <body>
 
-    <img src="logo.svg" class="logo-img" alt="Flow">
+    <div class="header">
+        <img src="logo.svg" class="logo-mini" alt="Flow">
+        <span class="tagline">соцсеть нового формата</span>
+    </div>
 
     <div class="card-container">
-        <div id="status-like" class="status like">LIKE</div>
-        <div id="status-dislike" class="status dislike">NOPE</div>
+        <div id="ind-like" class="indicator like">LIKE</div>
+        <div id="ind-dislike" class="indicator dislike">NOPE</div>
         
         <div class="card" id="main-card">
-            <div style="padding: 40px; text-align: center;">
-                <h2 style="margin:0">Нейросеть</h2>
-                <p style="opacity:0.6">подбирает контент...</p>
-            </div>
-            <div class="card-info">
-                <strong>@flow_ai</strong>
-                <div style="font-size: 12px; opacity: 0.7;">Попробуй свайпнуть</div>
+            <div class="card-content">
+                <h2>Твой Флоу</h2>
+                <p>Нейросеть уже знает, что тебе показать. Свайпай для старта.</p>
             </div>
         </div>
     </div>
 
-    <a href="#" class="btn" id="install-btn">Установить Флоу</a>
+    <a href="#" class="install-btn">Установить приложение</a>
 
     <script>
         const card = document.getElementById('main-card');
-        const likeS = document.getElementById('status-like');
-        const dislikeS = document.getElementById('status-dislike');
+        const likeI = document.getElementById('ind-like');
+        const dislikeI = document.getElementById('ind-dislike');
         let startX = 0;
+        let currentX = 0;
 
         card.addEventListener('pointerdown', e => {
             startX = e.clientX;
@@ -127,34 +155,49 @@
 
         document.addEventListener('pointermove', e => {
             if (!startX) return;
-            const x = e.clientX - startX;
-            const rotate = x / 10;
-            card.style.transform = `translateX(${x}px) rotate(${rotate}deg)`;
+            currentX = e.clientX - startX;
+            const rotation = currentX / 15;
+            card.style.transform = `translateX(${currentX}px) rotate(${rotation}deg)`;
             
-            likeS.style.opacity = x > 50 ? (x - 50) / 100 : 0;
-            dislikeS.style.opacity = x < -50 ? (Math.abs(x) - 50) / 100 : 0;
+            // Управление прозрачностью индикаторов
+            if (currentX > 40) {
+                likeI.style.opacity = Math.min((currentX - 40) / 100, 1);
+                dislikeI.style.opacity = 0;
+            } else if (currentX < -40) {
+                dislikeI.style.opacity = Math.min((Math.abs(currentX) - 40) / 100, 1);
+                likeI.style.opacity = 0;
+            } else {
+                likeI.style.opacity = 0;
+                dislikeI.style.opacity = 0;
+            }
         });
 
-        document.addEventListener('pointerup', e => {
+        document.addEventListener('pointerup', () => {
             if (!startX) return;
-            const x = e.clientX - startX;
-            card.style.transition = 'transform 0.5s ease, opacity 0.5s';
+            card.style.transition = 'transform 0.5s cubic-bezier(0.23, 1, 0.32, 1), opacity 0.5s';
             
-            if (Math.abs(x) > 120) {
-                card.style.transform = `translateX(${x * 5}px) rotate(${x / 5}deg)`;
+            if (Math.abs(currentX) > 130) {
+                // Улет карточки
+                const direction = currentX > 0 ? 1 : -1;
+                card.style.transform = `translateX(${direction * 1000}px) rotate(${direction * 45}deg)`;
                 card.style.opacity = '0';
+                
+                // Возврат карточки через секунду
                 setTimeout(() => {
+                    card.style.transition = 'none';
                     card.style.transform = 'translateX(0) rotate(0)';
                     card.style.opacity = '1';
-                    likeS.style.opacity = 0;
-                    dislikeS.style.opacity = 0;
-                }, 1000);
+                    likeI.style.opacity = 0;
+                    dislikeI.style.opacity = 0;
+                }, 800);
             } else {
+                // Возврат в центр
                 card.style.transform = 'translateX(0) rotate(0)';
-                likeS.style.opacity = 0;
-                dislikeS.style.opacity = 0;
+                likeI.style.opacity = 0;
+                dislikeI.style.opacity = 0;
             }
             startX = 0;
+            currentX = 0;
         });
     </script>
 </body>
